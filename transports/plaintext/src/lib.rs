@@ -43,6 +43,8 @@ use void::Void;
 mod error;
 mod handshake;
 mod proto {
+    #![allow(unreachable_pub)]
+
     include!("generated/mod.rs");
     pub use self::structs::Exchange;
 }

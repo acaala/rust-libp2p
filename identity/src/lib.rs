@@ -34,6 +34,8 @@
 //! All key types have functions to enable conversion to/from their binary representations.
 
 mod proto {
+    #![allow(unreachable_pub)]
+
     include!("generated/mod.rs");
     pub use self::keys_proto::*;
 }

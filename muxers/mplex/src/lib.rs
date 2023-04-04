@@ -50,8 +50,8 @@ where
     C: AsyncRead + AsyncWrite + Unpin,
 {
     type Output = Multiplex<C>;
-    type Error = io::Error;
-    type Future = future::Ready<Result<Self::Output, io::Error>>;
+    type Error = std::io::Error;
+    type Future = future::Ready<Result<Self::Output, std::io::Error>>;
 
     fn upgrade_inbound(self, socket: C, _: Self::Info) -> Self::Future {
         future::ready(Ok(Multiplex {
@@ -65,8 +65,8 @@ where
     C: AsyncRead + AsyncWrite + Unpin,
 {
     type Output = Multiplex<C>;
-    type Error = io::Error;
-    type Future = future::Ready<Result<Self::Output, io::Error>>;
+    type Error = std::io::Error;
+    type Future = future::Ready<Result<Self::Output, std::io::Error>>;
 
     fn upgrade_outbound(self, socket: C, _: Self::Info) -> Self::Future {
         future::ready(Ok(Multiplex {
@@ -85,7 +85,7 @@ where
     C: AsyncRead + AsyncWrite + Unpin,
 {
     type Substream = Substream<C>;
-    type Error = io::Error;
+    type Error = std::io::Error;
 
     fn poll_inbound(
         self: Pin<&mut Self>,
@@ -114,7 +114,7 @@ where
         Poll::Pending
     }
 
-    fn poll_close(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), io::Error>> {
+    fn poll_close(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), std::io::Error>> {
         self.io.lock().poll_close(cx)
     }
 }
@@ -127,7 +127,7 @@ where
         self: Pin<&mut Self>,
         cx: &mut Context<'_>,
         buf: &mut [u8],
-    ) -> Poll<io::Result<usize>> {
+    ) -> Poll<std::io::Result<usize>> {
         let this = self.get_mut();
 
         loop {
@@ -157,19 +157,19 @@ where
         self: Pin<&mut Self>,
         cx: &mut Context<'_>,
         buf: &[u8],
-    ) -> Poll<io::Result<usize>> {
+    ) -> Poll<std::io::Result<usize>> {
         let this = self.get_mut();
 
         this.io.lock().poll_write_stream(cx, this.id, buf)
     }
 
-    fn poll_flush(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<io::Result<()>> {
+    fn poll_flush(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<std::io::Result<()>> {
         let this = self.get_mut();
 
         this.io.lock().poll_flush_stream(cx, this.id)
     }
 
-    fn poll_close(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<io::Result<()>> {
+    fn poll_close(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<std::io::Result<()>> {
         let this = self.get_mut();
         let mut io = this.io.lock();
 

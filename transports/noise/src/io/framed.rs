@@ -38,7 +38,7 @@ const MAX_NOISE_MSG_LEN: usize = 65535;
 /// Space given to the encryption buffer to hold key material.
 const EXTRA_ENCRYPT_SPACE: usize = 1024;
 /// Max. length for Noise protocol message payloads.
-pub const MAX_FRAME_LEN: usize = MAX_NOISE_MSG_LEN - EXTRA_ENCRYPT_SPACE;
+pub(crate) const MAX_FRAME_LEN: usize = MAX_NOISE_MSG_LEN - EXTRA_ENCRYPT_SPACE;
 
 static_assertions::const_assert! {
     MAX_FRAME_LEN + EXTRA_ENCRYPT_SPACE <= MAX_NOISE_MSG_LEN
@@ -49,7 +49,7 @@ static_assertions::const_assert! {
 ///
 /// `T` is the type of the underlying I/O resource and `S` the
 /// type of the Noise session state.
-pub struct NoiseFramed<T, S> {
+pub(crate) struct NoiseFramed<T, S> {
     io: T,
     session: S,
     read_state: ReadState,
